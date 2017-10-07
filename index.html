@@ -9,9 +9,83 @@
 
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/scripts.js"></script>
-	
+
 </head>
 <body>
+
+<!-- 	Layout...
+	1. Create an element for our table
+	2. Make it green
+	3. Give it a border(white)
+	4. Create an element for the dealer's hand
+	5. Create an element for the dealers' total and the player's total
+	6. Create an element inside each hand for each card(max of 6)
+	7. Make a deal, hit, and stand button. -->
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 the-table">
+				<div class="row">
+					<div class="col-sm-12 dealer-hand-wrapper">
+						<div class="col-sm-6 col-sm-offset-3 total">
+							Dealer Total: <span class="dealer-total">CALCULATING<span>
+						</div>
+						<div class="col-sm-3 future">
+
+						</div>
+						<div class="col-sm-12 dealer-cards">
+							<div class="card card-1 col-sm-2">-</div>
+							<div class="card card-2 col-sm-2">-</div>
+							<div class="card card-3 col-sm-2">-</div>
+							<div class="card card-4 col-sm-2">-</div>
+							<div class="card card-5 col-sm-2">-</div>
+							<div class="card card-6 col-sm-2">-</div>
+						</div>
+					</div>
+					<div class="col-sm-12 player-hand-wrapper">
+						<div class="col-sm-6 col-sm-offset-3 total">
+							Player Total: <span class="player-total">CALCULATING<span>
+						</div>
+						<div class="col-sm-3 future">
+
+						</div>
+						<div class="col-sm-12 player-cards">
+							<div class="card card-1 col-sm-2">-</div>
+							<div class="card card-2 col-sm-2">-</div>
+							<div class="card card-3 col-sm-2">-</div>
+							<div class="card card-4 col-sm-2">-</div>
+							<div class="card card-5 col-sm-2">-</div>
+							<div class="card card-6 col-sm-2">-</div>
+						</div>
+					</div>
+				</div>
+				<div class="row score">
+					<div class="col-sm-12">
+						<div class="col-sm-4 player-score">
+							Player Win Count: <span class="player-win-count">0</span>
+						</div>
+						<div class="col-sm-4 dealer-score">
+							Dealer Win Count: <span class="dealer-win-count">0</span>
+						</div>
+						<div class="col-sm-4">
+
+						</div>
+					</div>
+				</div>
+				<div class="row text-center">
+					<div class="col-sm-4">
+						<button class="btn btn-primary deal-button">DEAL</button>
+					</div>
+					<div class="col-sm-4">
+						<button class="btn btn-danger hit-button">HIT</button>
+					</div>
+					<div class="col-sm-4">
+						<button class="btn btn-danger stand-button">STAND</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>
