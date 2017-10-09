@@ -22,14 +22,6 @@ $(document).ready(function(){
 	var standGameOn = true;
 	var aceValue = 1;
 
-	$(".value-one").click(()=>{
-		var aceValue = 1;
-	})
-
-	$(".value-one").click(()=>{
-		var aceValue = 10;
-	})
-
 	$('.deal-button').click(()=>{
 		hitGameOn = true;
 		standGameOn = true;
@@ -113,11 +105,17 @@ $(document).ready(function(){
 		// 1. If I have less than 17... I MUST hit
 		// 2. If I have 17 or more, I CANNOT hit (even if it means losing)
 			var dealersTotal = calculateTotal(dealersHand,'dealer');
+			var playersTotal = calculateTotal(playersHand,'player');
 			while(dealersTotal < 17){
-				var topCard = theDeck.shift();
-				dealersHand.push(topCard);
-				placeCard('dealer', dealersHand.length, topCard);
-				dealersTotal = calculateTotal(dealersHand,'dealer');
+				if(playersTotal <= 21){
+					var topCard = theDeck.shift();
+					dealersHand.push(topCard);
+					placeCard('dealer', dealersHand.length, topCard);
+					dealersTotal = calculateTotal(dealersHand,'dealer');
+				}else if(playersTotal > 21){
+					// var dealersTotal = calculateTotal(dealersHand,'dealer');
+					break;
+				}
 			}
 			placeCard('dealer',2,dealersHand[1]);
 			calculateTotal(dealersHand, "dealer");
@@ -174,8 +172,12 @@ $(document).ready(function(){
 			thisCardsValue = Number(hand[i].slice(0,-1));
 			if(thisCardsValue > 10){
 				thisCardsValue = 10;
-			}else if(thisCardsValue = 1){
-
+			}else if(thisCardsValue == 1){
+				if(handTotal < 11){
+					thisCardsValue = 11;
+				}else if(handTotal >= 11){
+					thisCardsValue = 1;
+				}
 			}
 			handTotal += thisCardsValue
 		}
@@ -185,16 +187,15 @@ $(document).ready(function(){
 	}
 
 	function reset(){
-		$(".dealer-total").html('CALCULATING')
-		$(".dealer-cards .card-3").html('-')
-		$(".dealer-cards .card-4").html('-')
-		$(".dealer-cards .card-5").html('-')
-		$(".dealer-cards .card-6").html('-')
-		$(".player-cards .card-3").html('-')
-		$(".player-cards .card-4").html('-')
-		$(".player-cards .card-5").html('-')
-		$(".player-cards .card-6").html('-')
-		aceValue = 1;
+		$(".dealer-total").html('CALCULATING');
+		$(".dealer-cards .card-3").html('-');
+		$(".dealer-cards .card-4").html('-');
+		$(".dealer-cards .card-5").html('-');
+		$(".dealer-cards .card-6").html('-');
+		$(".player-cards .card-3").html('-');
+		$(".player-cards .card-4").html('-');
+		$(".player-cards .card-5").html('-');
+		$(".player-cards .card-6").html('-');
 	}
 
 	function placeCard(who,where,whatToPlace){

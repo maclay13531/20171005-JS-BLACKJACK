@@ -15,8 +15,10 @@
 }
 
 .card img{
-	height:80px;
-	position: absolute;
+	height:100px;
+	display: block;
+	margin: auto;
+	padding-top: 10px;
 }
 
 .dealer-total{
@@ -56,4 +58,3 @@
 .dealer-win-count{
 	color: red;
 }
-
