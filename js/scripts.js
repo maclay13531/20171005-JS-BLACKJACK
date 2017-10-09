@@ -18,8 +18,21 @@ $(document).ready(function(){
 	// shuffleDeck();
 	var playerScore = 0;
 	var dealerScore = 0;
+	var hitGameOn = true;
+	var standGameOn = true;
+	var aceValue = 1;
+
+	$(".value-one").click(()=>{
+		var aceValue = 1;
+	})
+
+	$(".value-one").click(()=>{
+		var aceValue = 10;
+	})
 
 	$('.deal-button').click(()=>{
+		hitGameOn = true;
+		standGameOn = true;
 		reset();
 		// We will create and shuffle a new deck
 		theDeck = freshDeck.slice();
@@ -66,24 +79,31 @@ $(document).ready(function(){
 		// arg1: entire hand
 		// arg2: who
 		calculateTotal(playersHand,'player')
-		calculateTotal(dealersHand,'dealer')
+		// calculateTotal(dealersHand,'dealer')
 
 	})
 
 	$('.hit-button').click(()=>{
-		// Hit functionallity...
-		console.log("User clicked the hit button")
-		// get the top card
-		var topCard = theDeck.shift();
-		// push it on to the playersHand
-		playersHand.push(topCard);
-		// put the card in teh DOM
-		placeCard('player',playersHand.length, topCard)
-		// calculate teh new total
-		calculateTotal(playersHand,'player');
+		if(hitGameOn == true){
+			// Hit functionallity...
+			console.log("User clicked the hit button")
+			// get the top card
+			var topCard = theDeck.shift();
+			// push it on to the playersHand
+			playersHand.push(topCard);
+			// put the card in teh DOM
+			placeCard('player',playersHand.length, topCard)
+			// calculate teh new total
+			calculateTotal(playersHand,'player');
+			var checkTotal = calculateTotal(playersHand, 'player');
+			if(checkTotal >= 21){
+				hitGameOn = false;
+			}
+		}
 	})	
 
 	$('.stand-button').click(()=>{
+		if(standGameOn == true){
 		// Stand functionallity...
 		// console.log("User clicked the stand button")
 		// What happens to teh players hand on "Stand"?
@@ -92,16 +112,20 @@ $(document).ready(function(){
 		// Rules for the dealer:
 		// 1. If I have less than 17... I MUST hit
 		// 2. If I have 17 or more, I CANNOT hit (even if it means losing)
-		var dealersTotal = calculateTotal(dealersHand,'dealer');
-		while(dealersTotal < 17){
-			var topCard = theDeck.shift();
-			dealersHand.push(topCard);
-			placeCard('dealer', dealersHand.length, topCard);
-			dealersTotal = calculateTotal(dealersHand,'dealer');
+			var dealersTotal = calculateTotal(dealersHand,'dealer');
+			while(dealersTotal < 17){
+				var topCard = theDeck.shift();
+				dealersHand.push(topCard);
+				placeCard('dealer', dealersHand.length, topCard);
+				dealersTotal = calculateTotal(dealersHand,'dealer');
+			}
+			placeCard('dealer',2,dealersHand[1]);
+			calculateTotal(dealersHand, "dealer");
+			checkWin();
+			standGameOn = false;
+			hitGameOn = false;
 		}
-		placeCard('dealer',2,dealersHand[1]);
-		calculateTotal(dealersHand, "dealer")
-		checkWin();
+
 	})
 
 	function hideCard(who, where){
@@ -122,6 +146,9 @@ $(document).ready(function(){
 			}else if(dealerTotal >= playerTotal){	
 				dealerScore += 1;
 				$(".dealer-win-count").html(dealerScore);
+			}else if(dealerTotal < playerTotal){
+				playerScore += 1;
+				$(".player-win-count").html(playerScore);
 			}
 		}
 		// 1. If the player has > 21, player busts and loses.
@@ -147,6 +174,8 @@ $(document).ready(function(){
 			thisCardsValue = Number(hand[i].slice(0,-1));
 			if(thisCardsValue > 10){
 				thisCardsValue = 10;
+			}else if(thisCardsValue = 1){
+
 			}
 			handTotal += thisCardsValue
 		}
@@ -165,6 +194,7 @@ $(document).ready(function(){
 		$(".player-cards .card-4").html('-')
 		$(".player-cards .card-5").html('-')
 		$(".player-cards .card-6").html('-')
+		aceValue = 1;
 	}
 
 	function placeCard(who,where,whatToPlace){
