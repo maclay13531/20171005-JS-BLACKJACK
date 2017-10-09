@@ -20,9 +20,49 @@ $(document).ready(function(){
 	var dealerScore = 0;
 	var hitGameOn = true;
 	var standGameOn = true;
-	var aceValue = 1;
+	var startingTotal = 0;
+	var betAmount = 0;
+
+	$('button').prop('disabled',true);
+	$('.game-reset-button, .start-button').prop('disabled', false);
+
+	$('.game-reset-button').click(()=>{
+		reset();
+		$(".dealer-cards .card-1").html('<img src="images/cards/deck.png">');
+		$(".dealer-cards .card-2").html('<img src="images/cards/deck.png">');
+		$(".player-cards .card-1").html('<img src="images/cards/deck.png">');
+		$(".player-cards .card-2").html('<img src="images/cards/deck.png">');
+		$('.start-button').prop('disabled',false);
+		$('.hit-button').prop('disabled',true);
+		$('.deal-button').prop('disabled',true);
+		$('.stand-button').prop('disabled',true);
+		$('.bet25-button').prop('disabled',true);
+		$('.bet50-button').prop('disabled',true);
+		$('.bet100-button').prop('disabled',true);
+		playerScore = 0;
+		dealerScore = 0;
+		startingTotal = 0;
+		$('.player-win-count').html(playerScore);
+		$('.dealer-win-count').html(dealerScore);
+		$('.player-bet-total').html('0');
+		$('.check-message').html("");
+		var playersHand = [];
+		var dealersHand = [];
+	})
+
+	$('.start-button').click(()=>{
+		$('.start-button').prop('disabled',true);
+		$('.deal-button').prop('disabled',false);
+		startingTotal = (Math.floor(Math.random() * 101) * 5) + 100;
+		$('.player-bet-total').html(startingTotal);
+	})
 
 	$('.deal-button').click(()=>{
+		$('.deal-button').prop('disabled',true);
+		$('.bet25-button').prop('disabled',false);
+		$('.bet50-button').prop('disabled',false);
+		$('.bet100-button').prop('disabled',false);
+		$('.check-message').html("");
 		hitGameOn = true;
 		standGameOn = true;
 		reset();
@@ -70,9 +110,34 @@ $(document).ready(function(){
 		// Figure teh total and put it in teh dom
 		// arg1: entire hand
 		// arg2: who
-		calculateTotal(playersHand,'player')
+		calculateTotal(playersHand,'player');
 		// calculateTotal(dealersHand,'dealer')
+		$('.bet25-button').click(()=>{
+			betAmount = 25;
+			$('.bet25-button').prop('disabled',true);
+			$('.bet50-button').prop('disabled',true);
+			$('.bet100-button').prop('disabled',true);
+			$('.hit-button').prop('disabled',false);
+			$('.stand-button').prop('disabled',false);
+		})
 
+		$('.bet50-button').click(()=>{
+			betAmount = 50;
+			$('.bet25-button').prop('disabled',true);
+			$('.bet50-button').prop('disabled',true);
+			$('.bet100-button').prop('disabled',true);
+			$('.hit-button').prop('disabled',false);
+			$('.stand-button').prop('disabled',false);
+		})
+
+		$('.bet100-button').click(()=>{
+			betAmount = 100;
+			$('.bet25-button').prop('disabled',true);
+			$('.bet50-button').prop('disabled',true);
+			$('.bet100-button').prop('disabled',true);
+			$('.hit-button').prop('disabled',false);
+			$('.stand-button').prop('disabled',false);
+		})
 	})
 
 	$('.hit-button').click(()=>{
@@ -95,6 +160,8 @@ $(document).ready(function(){
 	})	
 
 	$('.stand-button').click(()=>{
+		$('.hit-button').prop("disabled", true);
+		$('.stand-button').prop("disabled", true);
 		if(standGameOn == true){
 		// Stand functionallity...
 		// console.log("User clicked the stand button")
@@ -122,6 +189,8 @@ $(document).ready(function(){
 			checkWin();
 			standGameOn = false;
 			hitGameOn = false;
+			$('.deal-button').prop('disabled',false);
+			checkGameWin();
 		}
 
 	})
@@ -131,22 +200,50 @@ $(document).ready(function(){
 		$(cardToHide).html('<img src="images/cards/deck.png">');
 	}
 
+	function checkGameWin(){
+		if(startingTotal >= 1000){
+			$('.check-message').html("YOU WON :)");
+			$('.deal-button').prop('disabled', true);
+			$('.check-message').animate({
+				'margin-left': "-500px",
+			}, 5000);
+		}else if(startingTotal <= 0){
+			$('.check-message').html("YOU LOST :(");
+			$('.deal-button').prop('disabled', true);
+			$('.check-message').animate({
+				'margin-left': "-500px",
+			}, 5000);
+		}
+	}
+
 	function checkWin(){
 		var playerTotal = calculateTotal(playersHand,'player');
 		var dealerTotal = calculateTotal(dealersHand,'dealer');
 		if(playerTotal > 21){
 			dealerScore += 1;
 			$(".dealer-win-count").html(dealerScore);
+			startingTotal -= betAmount;
+			$(".player-bet-total").html(startingTotal);
+			$('.check-message').html(`PLAYER LOST ${betAmount} CHIPS`);
 		}else if(playerTotal <= 21){
 			if(dealerTotal > 21){
 				playerScore += 1;
 				$(".player-win-count").html(playerScore);
+				startingTotal += betAmount;
+				$(".player-bet-total").html(startingTotal);
+				$('.check-message').html(`PLAYER WIN ${betAmount} CHIPS`);
 			}else if(dealerTotal >= playerTotal){	
 				dealerScore += 1;
 				$(".dealer-win-count").html(dealerScore);
+				startingTotal -= betAmount;
+				$(".player-bet-total").html(startingTotal);
+				$('.check-message').html(`PLAYER LOST ${betAmount} CHIPS`)
 			}else if(dealerTotal < playerTotal){
 				playerScore += 1;
 				$(".player-win-count").html(playerScore);
+				startingTotal += betAmount;
+				$(".player-bet-total").html(startingTotal);
+				$('.check-message').html(`PLAYER WIN ${betAmount} CHIPS`);
 			}
 		}
 		// 1. If the player has > 21, player busts and loses.
@@ -188,14 +285,14 @@ $(document).ready(function(){
 
 	function reset(){
 		$(".dealer-total").html('CALCULATING');
-		$(".dealer-cards .card-3").html('-');
-		$(".dealer-cards .card-4").html('-');
-		$(".dealer-cards .card-5").html('-');
-		$(".dealer-cards .card-6").html('-');
-		$(".player-cards .card-3").html('-');
-		$(".player-cards .card-4").html('-');
-		$(".player-cards .card-5").html('-');
-		$(".player-cards .card-6").html('-');
+		$(".dealer-cards .card-3").html('<img src="images/cards/deck.png">');
+		$(".dealer-cards .card-4").html('<img src="images/cards/deck.png">');
+		$(".dealer-cards .card-5").html('<img src="images/cards/deck.png">');
+		$(".dealer-cards .card-6").html('<img src="images/cards/deck.png">');
+		$(".player-cards .card-3").html('<img src="images/cards/deck.png">');
+		$(".player-cards .card-4").html('<img src="images/cards/deck.png">');
+		$(".player-cards .card-5").html('<img src="images/cards/deck.png">');
+		$(".player-cards .card-6").html('<img src="images/cards/deck.png">');
 	}
 
 	function placeCard(who,where,whatToPlace){
