@@ -3,7 +3,9 @@
 }
 
 .the-table{
-	background-color: #277714;
+	/*background-color: #277714;*/
+	background-image: url("../images/board.jpg");
+	background-size: 100% 100%;
 	border: 5px solid yellow;
 	border-radius: 10px 10px 60px 60px;
 	margin-top: 50px;
@@ -46,18 +48,23 @@
 
 .player-score, .dealer-score, .bet-total, .message{
 	font-size: 15px;
+	color: white;
+	font-weight: bold;
 }
 
 .player-win-count{
 	color: blue;
+	font-weight: bold;
 }
 
 .dealer-win-count{
 	color: red;
+	font-weight: bold;
 }
 
 .check-message{
 	color: yellow;
+	font-weight: bold;
 }
 
 .bet-function{
@@ -82,6 +89,8 @@
 	margin-top: 10px;
 	color: yellow;
 	font-size: 15px;
+	background-image: url("../images/board1.jpg");
+	background-size: 100% 100%;
 }
 
 ol{

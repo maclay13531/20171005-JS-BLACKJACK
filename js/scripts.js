@@ -59,9 +59,23 @@ $(document).ready(function(){
 
 	$('.deal-button').click(()=>{
 		$('.deal-button').prop('disabled',true);
-		$('.bet25-button').prop('disabled',false);
-		$('.bet50-button').prop('disabled',false);
-		$('.bet100-button').prop('disabled',false);
+		if(startingTotal < 25){
+			$('.bet25-button').prop('disabled',true);
+			$('.bet50-button').prop('disabled',true);
+			$('.bet100-button').prop('disabled',true);
+		}else if(startingTotal < 50){
+			$('.bet25-button').prop('disabled',false);
+			$('.bet50-button').prop('disabled',true);
+			$('.bet100-button').prop('disabled',true);
+		}else if(startingTotal < 100){
+			$('.bet25-button').prop('disabled',false);
+			$('.bet50-button').prop('disabled',false);
+			$('.bet100-button').prop('disabled',true);
+		}else{
+			$('.bet25-button').prop('disabled',false);
+			$('.bet50-button').prop('disabled',false);
+			$('.bet100-button').prop('disabled',false);
+		}
 		$('.check-message').html("");
 		hitGameOn = true;
 		standGameOn = true;
@@ -204,7 +218,7 @@ $(document).ready(function(){
 		if(startingTotal >= 1000){
 			$('.check-message').html("YOU WON :)");
 			$('.deal-button').prop('disabled', true);
-		}else if(startingTotal <= 0){
+		}else if(startingTotal <= 24){
 			$('.check-message').html("YOU LOST :(");
 			$('.deal-button').prop('disabled', true);
 		}
@@ -257,6 +271,8 @@ $(document).ready(function(){
 		var handTotal = 0;
 		// As we loop through the hand, we need a var for each card's value
 		var thisCardsValue = 0;
+		var totalAce = 0;
+		var hasAce = false;
 		for(let i = 0; i < hand.length; i++){
 			// copy onto thisCardsValue the entire string EXCEPT for the last char (which is the suit)
 			// then, convert it to a number			
@@ -264,13 +280,16 @@ $(document).ready(function(){
 			if(thisCardsValue > 10){
 				thisCardsValue = 10;
 			}else if(thisCardsValue == 1){
-				if(handTotal < 11){
-					thisCardsValue = 11;
-				}else if(handTotal >= 11){
-					thisCardsValue = 1;
-				}
+				totalAce++;
+				hasAce = true;
+				thisCardsValue = 11;
 			}
 			handTotal += thisCardsValue
+		}
+		for(let i = 0; i < totalAce; i++){
+			if(handTotal > 21){
+				handTotal -= 10;
+			}
 		}
 		var classSelector = `.${who}-total`;
 		$(classSelector).html(handTotal);
@@ -279,6 +298,7 @@ $(document).ready(function(){
 
 	function reset(){
 		$(".dealer-total").html('CALCULATING');
+		$(".player-total").html('CALCULATING');
 		$(".dealer-cards .card-3").html('<img src="images/cards/deck.png">');
 		$(".dealer-cards .card-4").html('<img src="images/cards/deck.png">');
 		$(".dealer-cards .card-5").html('<img src="images/cards/deck.png">');
