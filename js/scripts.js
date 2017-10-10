@@ -204,15 +204,9 @@ $(document).ready(function(){
 		if(startingTotal >= 1000){
 			$('.check-message').html("YOU WON :)");
 			$('.deal-button').prop('disabled', true);
-			$('.check-message').animate({
-				'margin-left': "-500px",
-			}, 5000);
 		}else if(startingTotal <= 0){
 			$('.check-message').html("YOU LOST :(");
 			$('.deal-button').prop('disabled', true);
-			$('.check-message').animate({
-				'margin-left': "-500px",
-			}, 5000);
 		}
 	}
 
