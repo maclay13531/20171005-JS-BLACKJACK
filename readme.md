@@ -1,5 +1,8 @@
 # BlackJack Game
-## Made with JavaScript, JQuery, CSS, and Bootstrap.
+
+##DESCRIPTION
+1. HTML and CSS are used for the blackjack platform.
+2. JQUERY is utilized to show the logic of the game.
 
 ## How to Use
 1. Click start then deal to start the game. 
